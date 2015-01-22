@@ -19,6 +19,7 @@ from LocalLinearRegression import *
 import gensim
 
 from displacements import Displacements
+import entropy
 
 import logging
 LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
@@ -26,23 +27,18 @@ logger = logging.getLogger("langchangetrack")
 
 os.system("taskset -p 0xffff %d" % os.getpid())
 
-def get_vectors_sg(model, norm_embedding=True):
-    """ Return the embeddings of  a skipgram model. """
-    if norm_embedding:
-        return model.syn0norm
-    else:
-        return model.syn0
+def get_vectors_pos(model, norm_embedding=True):
+    return model
 
-def load_model_skipgram(model_path):
-    """ Load the skipgram model from a file in word2vec format. """
-    return gensim.models.Word2Vec.load_word2vec_format(model_path)
+def load_model_pos(model_path):
+    """ Load the POS model from a file."""
+    return pd.read_csv(model_path) 
 
-def load_predictor_skipgram(predictor_path):
+def load_predictor_pos(predictor_path):
     """ Load the predictor model. """
-    return pickle.load(open(predictor_path))
+    return DummyRegressor()
 
-
-class EmbeddingsDisplacements(Displacements):
+class POSDisplacements(Displacements):
     def __init__(self, 
                  data_dir,
                  pred_dir, 
@@ -60,12 +56,12 @@ class EmbeddingsDisplacements(Displacements):
                  
         """ Constructor """
         # Initialize the super class.
-        super(EmbeddingsDisplacements, self).__init__()
+        super(POSDisplacements, self).__init__()
         self.get_vectors = get_vectors
         self.load_model  = load_model
         self.has_predictors =  True
         self.load_predictor = load_predictor
-        self.norm_embedding = True
+        self.norm_embedding = False
         self.words_file = words_file
         self.timepoints = timepoints
         self.data_dir = data_dir
@@ -78,36 +74,36 @@ class EmbeddingsDisplacements(Displacements):
         self.predictor_suffix = predictor_suffix
 
     def number_distance_metrics(self):
-        return 2
+        return 1
 
     def calculate_distance(self, vec1, vec2):
         """ Calculate distances between vector1 and vector2. """
-        return [cosine(vec1, vec2), euclidean(vec1,vec2)]
+        if vec1 is None or vec2 is None:
+            return [np.nan]
+        d = entropy.jensen_shannon_divergence(np.vstack([vec1, vec2]), unit='digit')
+        return [d[0]]
 
     def load_models_and_predictors(self):
         """ Load all the models and predictors. """
         self.models = {}
         self.predictors = {}
-        model_paths = [path.join(self.data_dir, timepoint+'_embeddings' + self.embedding_suffix) for timepoint in self.timepoints]
-        predictor_handles = [path.join(self.pred_dir, timepoint + '_embeddings' + self.predictor_suffix) for timepoint in self.timepoints]
+        model_paths = [path.join(self.data_dir, timepoint + self.embedding_suffix) for timepoint in self.timepoints]
+        predictor_handles = [timepoint for timepoint in self.timepoints]
         loaded_models = Parallel(n_jobs=16)(delayed(self.load_model)(model_path) for model_path in model_paths)
         for i, timepoint in enumerate(self.timepoints):
             self.models[timepoint] = loaded_models[i]
             self.predictors[timepoint] = self.load_predictor(predictor_handles[i])
-            if hasattr(self.predictors[timepoint], 'weight_func'):
-                self.predictors[timepoint].weight_func = KernelFunctions.uniform 
-                print "Loaded predictor for", timepoint
         print "Done loading predictors"
 
     def is_present(self, timepoint, word):
         """ Check if the word is present in the vocabulary at this timepoint. """ 
         model = self.get_model(timepoint)
-        return word in model.vocab
+        return word in model.word.values
 
     def get_vector(self, timepoint, word):
         """ Get the embedding for this word at the specified timepoint."""
         model = self.get_model(timepoint)
-        return self.get_vectors(model, self.norm_embedding)[model.vocab[word].index]
+        return model[model.word == word].values[0][1:]
 
 def main(args):
     syear = int(args.syear)
@@ -116,14 +112,14 @@ def main(args):
     timepoints = np.arange(syear, eyear, stepsize)
     timepoints = [str(t) for t in timepoints]
     # Create the main work horse.
-    e = EmbeddingsDisplacements(args.datadir,
+    e = POSDisplacements(args.datadir,
                                 args.preddir,
                                 args.filename,
                                 timepoints,
                                 int(args.num_words),
-                                get_vectors_sg,
-                                load_model_skipgram,
-                                load_predictor_skipgram,
+                                get_vectors_pos,
+                                load_model_pos,
+                                load_predictor_pos,
                                 args.method,
                                 args.win_size,
                                 str(args.fixed_point),
@@ -134,7 +130,7 @@ def main(args):
     e.load_models_and_predictors()
 
     # Calculate the word displacements and dump.
-    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['w', 's', 'ow', 't', 'cosine', 'euclidean'])
+    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['word', 's', 'nword', 't', 'jsd'])
     fname = 'timeseries_s_t' + '_' + args.outputsuffix + '.pkl'
     pickle.dump((L,H, dfo, dfn), open(path.join(args.outputdir, fname),'wb'))
 
@@ -150,7 +146,7 @@ if __name__ == "__main__":
     parser.add_argument("-sy", "--start", dest="syear", default = '1800', help="start year")
     parser.add_argument("-ey", "--end", dest="eyear", default = '2010', help="end year(not included)")
     parser.add_argument("-s", "--window_size", dest="stepsize", default = 5, help="Window size for time series")
-    parser.add_argument("-e", "--embedding_type", dest="embedding_type", default = 'skipgram',  help="Embedding type")
+    parser.add_argument("-e", "--embedding_type", dest="embedding_type", default = 'pos',  help="Embedding type")
     parser.add_argument("-m", "--method", dest="method", default="polar", help="Method to use")
     parser.add_argument("-w", "--win_size", dest="win_size", default="-1", help="Window size to use if not polar", type=int)
     parser.add_argument("-y", "--fixed_point", dest="fixed_point", default="-1", help="fixed point to use if method is fixed", type=int)
