@@ -134,7 +134,7 @@ def main(args):
     e.load_models_and_predictors()
 
     # Calculate the word displacements and dump.
-    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['w', 's', 'ow', 't', 'cosine', 'euclidean'])
+    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['word', 's', 'otherword', 't', 'cosine', 'euclidean'])
     fname = 'timeseries_s_t' + '_' + args.outputsuffix + '.pkl'
     pickle.dump((L,H, dfo, dfn), open(path.join(args.outputdir, fname),'wb'))
 
