@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 try:
     from setuptools import setup
 except ImportError:
@@ -31,7 +30,8 @@ setup(
         'langchangetrack',
         'langchangetrack.utils',
         'langchangetrack.corpusreaders',
-        'langchangetrack.tsconstruction'
+        'langchangetrack.tsconstruction',
+        'langchangetrack.tsconstruction.distributional'
     ],
     package_dir={'langchangetrack':
                  'langchangetrack'},
@@ -51,6 +51,14 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+    ],
+    scripts=[
+        'langchangetrack/tsconstruction/freq/scripts/create_freq_timeseries.py',
+        'langchangetrack/tsconstruction/syntactic/scripts/pos_displacements.py',
+        'langchangetrack/tsconstruction/distributional/scripts/train_embeddings_ngrams.py',
+        'langchangetrack/tsconstruction/distributional/scripts/learn_map.py',
+        'langchangetrack/tsconstruction/distributional/scripts/embedding_displacements.py',
+        'langchangetrack/tsconstruction/dump_timeseries.py',
     ],
     test_suite='tests',
     tests_require=test_requirements
