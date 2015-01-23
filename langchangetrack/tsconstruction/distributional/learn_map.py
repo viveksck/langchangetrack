@@ -21,7 +21,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import NearestNeighbors
 import numpy
 from numpy import asarray
-from LocalLinearRegression import LocalLinearRegression
+from langchangetrack.utils import LocalLinearRegression
 
 __author__ = "Rami Al-Rfou"
 __email__ = "rmyeid@gmail.com"

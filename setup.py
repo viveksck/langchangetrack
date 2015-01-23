@@ -29,6 +29,9 @@ setup(
     url='https://github.com/viveksck/langchangetrack',
     packages=[
         'langchangetrack',
+        'langchangetrack.utils',
+        'langchangetrack.corpusreaders',
+        'langchangetrack.tsconstruction'
     ],
     package_dir={'langchangetrack':
                  'langchangetrack'},

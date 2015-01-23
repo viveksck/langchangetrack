@@ -14,12 +14,12 @@ import pandas as pd
 import more_itertools
 from joblib import Parallel, delayed
 
-from dummy_regressor import *
-from LocalLinearRegression import *
 import gensim
 
-from displacements import Displacements
-import entropy
+from langchangetrack.utils.dummy_regressor import DummyRegressor 
+from langchangetrack.utils import LocalLinearRegression
+from langchangetrack.utils import entropy
+from langchangetrack.tsconstruction.displacements import Displacements
 
 import logging
 LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"

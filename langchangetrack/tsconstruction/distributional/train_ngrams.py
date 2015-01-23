@@ -9,7 +9,7 @@ import sys
 from io import open
 from os import path
 from time import time
-from plainngramscorpus import PlainNGRAMSCorpus
+from langchangetrack.corpusreaders.plainngramscorpus import PlainNGRAMSCorpus
 from corpustoembeddings import CorpusToEmbeddings
 
 import logging
