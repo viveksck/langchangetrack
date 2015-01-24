@@ -59,6 +59,7 @@ setup(
         'langchangetrack/tsconstruction/distributional/scripts/learn_map.py',
         'langchangetrack/tsconstruction/distributional/scripts/embedding_displacements.py',
         'langchangetrack/tsconstruction/dump_timeseries.py',
+        'langchangetrack/cpdetection/detect_changepoints_word_ts.py',
     ],
     test_suite='tests',
     tests_require=test_requirements
