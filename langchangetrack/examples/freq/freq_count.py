@@ -19,6 +19,7 @@ LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
 
 
 def main(args):
+  encoding = sys.stdout.encoding or 'utf-8'
   f = open(args.filename)
   fd = nltk.FreqDist()
   for line in f:
@@ -27,7 +28,8 @@ def main(args):
         fd[word] += 1
 
   for w, count in fd.most_common():
-    print "{} {}".format(w, count)
+    tup = u"{} {}".format(w, count)
+    print tup.encode(encoding)
 
 def debug(type_, value, tb):
   if hasattr(sys, 'ps1') or not sys.stderr.isatty():

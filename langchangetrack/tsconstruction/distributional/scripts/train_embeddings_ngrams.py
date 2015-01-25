@@ -10,7 +10,7 @@ from io import open
 from os import path
 from time import time
 from langchangetrack.corpusreaders.plainngramscorpus import PlainNGRAMSCorpus
-from corpustoembeddings import CorpusToEmbeddings
+from langchangetrack.tsconstruction.distributional.corpustoembeddings import CorpusToEmbeddings
 
 import logging
 logger = logging.getLogger("langchangetrack")
