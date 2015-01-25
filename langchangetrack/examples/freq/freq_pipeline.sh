@@ -10,5 +10,5 @@ mkdir -p $WORKING_DIR
 mkdir -p $OUTPUT_DIR
 
 mkdir -p $WORKING_DIR/counts/
-ls $CORPUS_DIR/*.$EXT | parallel -j16 "python freq_count.py -f {} > $WORKING_DIR/counts/{/.}.freq"
+ls $CORPUS_DIR/*.$EXT | parallel -j16 "freq_count.py -f {} > $WORKING_DIR/counts/{/.}.freq"
 detect_cp_freq.sh $WORKING_DIR/counts/ $WORKING_DIR $OUTPUT_DIR $STARTTIMEPOINT $ENDTIMEPOINT $STEP $FILTER_VOCAB_FILE

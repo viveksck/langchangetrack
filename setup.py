@@ -63,6 +63,8 @@ setup(
         'langchangetrack/scripts/detect_cp_freq.sh',
         'langchangetrack/scripts/detect_cp_pos.sh',
         'langchangetrack/scripts/detect_cp_distributional.sh',
+        'langchangetrack/utils/scripts/freq_count.py',
+        'langchangetrack/utils/scripts/common_vocab.py',
     ],
     test_suite='tests',
     tests_require=test_requirements

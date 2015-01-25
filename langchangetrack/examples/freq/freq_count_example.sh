@@ -1,1 +1,1 @@
-python freq_count.py -f gutenberg.txt > gutenberg.freq
+freq_count.py -f ../data/sample_corpora/gutenberg.txt > gutenberg.freq
