@@ -15,7 +15,6 @@ import more_itertools
 from joblib import Parallel, delayed
 
 from langchangetrack.utils.dummy_regressor import DummyRegressor 
-from langchangetrack.utils.LocalLinearRegression import *
 import gensim
 
 import logging
@@ -125,7 +124,7 @@ class Displacements(object):
                     L.append([word1, timepoint1, word2, timepoint2] + d)
                 else:
                     #Word is not present in both time periods
-                    L.append([word1, timepoint1, word2, timepoint2] + itertools.repeat(np.nan, self.number_distance_metrics()))
+                    L.append([word1, timepoint1, word2, timepoint2] + list(itertools.repeat(np.nan, self.number_distance_metrics())))
         return L
 
     def get_timepoints_word(self, w, timepoints):
@@ -163,11 +162,11 @@ class Displacements(object):
 
         words = self.get_word_list()
         # Create chunks of the words to be processed.
-        chunks = list(more_itertools.chunked(words, 100))
+        chunks = list(more_itertools.chunked(words, 400))
 
         # Calculate the displacements
-        chunksL = Parallel(n_jobs=2, verbose=20)(delayed(process_chunk)(chunk, process_word_source, self) for chunk in chunks)
-        chunksH = Parallel(n_jobs=2, verbose=20)(delayed(process_chunk)(chunk, process_word_dest, self) for chunk in chunks)
+        chunksL = Parallel(n_jobs=16, verbose=20)(delayed(process_chunk)(chunk, process_word_source, self) for chunk in chunks)
+        chunksH = Parallel(n_jobs=16, verbose=20)(delayed(process_chunk)(chunk, process_word_dest, self) for chunk in chunks)
         L = more_itertools.flatten(chunksL)
         H = more_itertools.flatten(chunksH)
         flattendL = [x for sublist in L for x in sublist]

@@ -14,8 +14,8 @@ import pandas as pd
 import more_itertools
 from joblib import Parallel, delayed
 
+import langchangetrack
 from langchangetrack.utils.dummy_regressor import DummyRegressor
-from langchangetrack.utils.LocalLinearRegression import *
 import gensim
 
 from langchangetrack.tsconstruction.displacements import Displacements
@@ -25,6 +25,9 @@ LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
 logger = logging.getLogger("langchangetrack")
 
 os.system("taskset -p 0xffff %d" % os.getpid())
+
+def uniform(distances):
+    return np.ones(len(distances))
 
 def get_vectors_sg(model, norm_embedding=True):
     """ Return the embeddings of  a skipgram model. """
@@ -95,7 +98,7 @@ class EmbeddingsDisplacements(Displacements):
             self.models[timepoint] = loaded_models[i]
             self.predictors[timepoint] = self.load_predictor(predictor_handles[i])
             if hasattr(self.predictors[timepoint], 'weight_func'):
-                self.predictors[timepoint].weight_func = KernelFunctions.uniform 
+                self.predictors[timepoint].weight_func = uniform
                 print "Loaded predictor for", timepoint
         print "Done loading predictors"
 
