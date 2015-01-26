@@ -52,7 +52,7 @@ def get_filtered_df(df, vocab_file):
         return df
 
 
-def get_pval_word(df, word):
+def get_pval_word(df, word, B):
     """ 
     Get the pvalue of a change point at each time point 't' corresponding to
     the word. Also return the number of tail successes during boot strap.
@@ -64,7 +64,7 @@ def get_pval_word(df, word):
     # Create a mean shift model
     model = MeanShiftModel()
     # Detect the change points using a mean shift model
-    stats_ts, pvals, nums = model.detect_mean_shift(ts)
+    stats_ts, pvals, nums = model.detect_mean_shift(ts, B=B)
     # Return the word and pvals associated with each time point.
     L = [word]
     L.extend(pvals)
@@ -73,9 +73,9 @@ def get_pval_word(df, word):
     return L, H
 
 
-def get_pval_word_chunk(chunk, df):
+def get_pval_word_chunk(chunk, df, B):
     """ Get the p-values for each time point for a chunk of words. """
-    results = [get_pval_word(df, w) for w in chunk]
+    results = [get_pval_word(df, w, B) for w in chunk]
     return results
 
 
@@ -174,7 +174,7 @@ def main(args):
     cwords = norm_df.word.values
     print "Number of words we are analyzing:", len(cwords)
 
-    results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=400, n_jobs=12, df=norm_df)
+    results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=400, n_jobs=12, df=norm_df, B=args.B)
 
     pvals, num_samples = zip(*results)
 
@@ -204,6 +204,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--col", dest="col", help="column to drop")
     parser.add_argument("-d", "--dont_normalize", dest="dont_normalize", action='store_true', default=False, help="Dont normalize")
     parser.add_argument("-t", "--threshold", dest="threshold", default=1.75, type=float, help="column to drop")
+    parser.add_argument("-b", "--bootstrap", dest="B", default=1000, type=int, help="Number of  bootstrapped samples to take")
     parser.add_argument("-l", "--log", dest="log", help="log verbosity level", default="INFO")
     args = parser.parse_args()
     if args.log == 'DEBUG':
