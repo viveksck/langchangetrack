@@ -24,7 +24,11 @@ import logging
 LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
 logger = logging.getLogger("langchangetrack")
 
-os.system("taskset -p 0xffff %d" % os.getpid())
+import psutil
+from multiprocessing import cpu_count
+
+p = psutil.Process(os.getpid())
+p.set_cpu_affinity(list(range(cpu_count())))
 
 
 def uniform(distances):
@@ -64,7 +68,8 @@ class EmbeddingsDisplacements(Displacements):
                  win_size,
                  fixed_point,
                  embedding_suffix,
-                 predictor_suffix):
+                 predictor_suffix,
+                 workers):
         """ Constructor """
         # Initialize the super class.
         super(EmbeddingsDisplacements, self).__init__()
@@ -83,6 +88,7 @@ class EmbeddingsDisplacements(Displacements):
         self.fixed_point = fixed_point
         self.embedding_suffix = embedding_suffix
         self.predictor_suffix = predictor_suffix
+        self.workers = workers
 
     def number_distance_metrics(self):
         return 2
@@ -97,7 +103,7 @@ class EmbeddingsDisplacements(Displacements):
         self.predictors = {}
         model_paths = [path.join(self.data_dir, timepoint + '_embeddings' + self.embedding_suffix) for timepoint in self.timepoints]
         predictor_handles = [path.join(self.pred_dir, timepoint + '_embeddings' + self.predictor_suffix) for timepoint in self.timepoints]
-        loaded_models = Parallel(n_jobs=16)(delayed(self.load_model)(model_path) for model_path in model_paths)
+        loaded_models = Parallel(n_jobs=self.workers)(delayed(self.load_model)(model_path) for model_path in model_paths)
         for i, timepoint in enumerate(self.timepoints):
             self.models[timepoint] = loaded_models[i]
             self.predictors[timepoint] = self.load_predictor(predictor_handles[i])
@@ -123,6 +129,7 @@ def main(args):
     stepsize = int(args.stepsize)
     timepoints = np.arange(syear, eyear, stepsize)
     timepoints = [str(t) for t in timepoints]
+    workers = int(args.workers)
     # Create the main work horse.
     e = EmbeddingsDisplacements(args.datadir,
                                 args.preddir,
@@ -136,13 +143,14 @@ def main(args):
                                 args.win_size,
                                 str(args.fixed_point),
                                 args.embedding_suffix,
-                                args.predictor_suffix)
+                                args.predictor_suffix,
+                                workers)
 
     # Load the models and predictors
     e.load_models_and_predictors()
 
     # Calculate the word displacements and dump.
-    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['word', 's', 'otherword', 't', 'cosine', 'euclidean'])
+    L, H, dfo, dfn = e.calculate_words_displacement(column_names=['word', 's', 'otherword', 't', 'cosine', 'euclidean'], n_jobs=workers)
     fname = 'timeseries_s_t' + '_' + args.outputsuffix + '.pkl'
     pickle.dump((L, H, dfo, dfn), open(path.join(args.outputdir, fname), 'wb'))
 
@@ -163,6 +171,7 @@ if __name__ == "__main__":
     parser.add_argument("-w", "--win_size", dest="win_size", default="-1", help="Window size to use if not polar", type=int)
     parser.add_argument("-y", "--fixed_point", dest="fixed_point", default="-1", help="fixed point to use if method is fixed", type=int)
     parser.add_argument("-n", "--num_words", dest="num_words", default=-1, help="Number of words", type=int)
+    parser.add_argument("-workers", "--workers", dest="workers", default=1, help="Maximum number of workers", type=int)
     logging.basicConfig(level=logging.INFO, format=LOGFORMAT)
     args = parser.parse_args()
     main(args)

@@ -10,10 +10,14 @@ from functools import partial
 from changepoint.mean_shift_model import MeanShiftModel
 from changepoint.utils.ts_stats import parallelize_func
 
-os.system("taskset -p 0xffff %d" % os.getpid())
-
 __author__ = "Vivek Kulkarni"
 __email__ = "viveksck@gmail.com"
+
+import psutil
+from multiprocessing import cpu_count
+
+p = psutil.Process(os.getpid())
+p.set_cpu_affinity(list(range(cpu_count())))
 
 # Global variable specifying which column index the time series
 # begins in a dataframe
@@ -139,6 +143,8 @@ def main(args):
     should_normalize = not(args.dont_normalize)
     threshold = float(args.threshold)
 
+    workers = args.workers
+
     print "Config:"
     print "Input data frame file name:", df_f
     print "Vocab file", common_vocab_file
@@ -174,7 +180,8 @@ def main(args):
     cwords = norm_df.word.values
     print "Number of words we are analyzing:", len(cwords)
 
-    results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=400, n_jobs=12, df=norm_df, B=args.B)
+    chunksz = np.ceil(len(cwords) / workers)
+    results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=chunksz, n_jobs=workers, df=norm_df, B=args.B)
 
     pvals, num_samples = zip(*results)
 
@@ -205,6 +212,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dont_normalize", dest="dont_normalize", action='store_true', default=False, help="Dont normalize")
     parser.add_argument("-t", "--threshold", dest="threshold", default=1.75, type=float, help="column to drop")
     parser.add_argument("-b", "--bootstrap", dest="B", default=1000, type=int, help="Number of  bootstrapped samples to take")
+    parser.add_argument("-w", "--workers", dest="workers", default=1, type=int, help="Number of workers to use")
     parser.add_argument("-l", "--log", dest="log", help="log verbosity level", default="INFO")
     args = parser.parse_args()
     if args.log == 'DEBUG':

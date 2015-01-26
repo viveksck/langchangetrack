@@ -21,8 +21,11 @@ import logging
 LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
 logger = logging.getLogger("langchangetrack")
 
-os.system("taskset -p 0xffff %d" % os.getpid())
+import psutil
+from multiprocessing import cpu_count
 
+p = psutil.Process(os.getpid())
+p.set_cpu_affinity(list(range(cpu_count())))
 
 def normalize_vector(vec):
     """ Normalize a vector by its L2 norm. """
@@ -164,16 +167,17 @@ class Displacements(object):
         t = self.get_timepoints_word(w, self.timepoints)
         return self.generate_displacement_word(w, t[index])
 
-    def calculate_words_displacement(self, column_names):
+    def calculate_words_displacement(self, column_names, n_jobs = 1):
         """ Calculate word displacements for each word in the Pandas data frame. """
 
         words = self.get_word_list()
         # Create chunks of the words to be processed.
-        chunks = list(more_itertools.chunked(words, 400))
+        chunk_sz = np.ceil(len(words)/n_jobs)
+        chunks = list(more_itertools.chunked(words, chunk_sz))
 
         # Calculate the displacements
-        chunksL = Parallel(n_jobs=16, verbose=20)(delayed(process_chunk)(chunk, process_word_source, self) for chunk in chunks)
-        chunksH = Parallel(n_jobs=16, verbose=20)(delayed(process_chunk)(chunk, process_word_dest, self) for chunk in chunks)
+        chunksL = Parallel(n_jobs=n_jobs, verbose=20)(delayed(process_chunk)(chunk, process_word_source, self) for chunk in chunks)
+        chunksH = Parallel(n_jobs=n_jobs, verbose=20)(delayed(process_chunk)(chunk, process_word_dest, self) for chunk in chunks)
         L = more_itertools.flatten(chunksL)
         H = more_itertools.flatten(chunksH)
         flattendL = [x for sublist in L for x in sublist]
