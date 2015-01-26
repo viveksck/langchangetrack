@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""template.py: Description of what the module does."""
+"""common_vocab.py: Dumps the common vocabulary between a set of text files."""
 
 from argparse import ArgumentParser
 import logging

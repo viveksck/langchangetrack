@@ -9,13 +9,13 @@ import gensim
 import logging
 logger = logging.getLogger("langchangetrack")
 
+
 class CorpusToEmbeddings(object):
 
     """ Class that encapsulates functionality for obtaining embeddings from a corpus."""
 
     def __init__(self, corpus_iter, embeddings_type, lang='en',
-                 model_config={}, save_model_file = None):
-
+                 model_config={}, save_model_file=None):
         """ Initialize the object with the corpus iterator and 
             the type of embeddings.
         
@@ -37,8 +37,8 @@ class CorpusToEmbeddings(object):
         self.model_config = model_config
 
         self.embeddings_builder_map = {
-                                       'skipgram': self.buildword2vec
-                                      }
+            'skipgram': self.buildword2vec
+        }
         self.model = None
         self.save_model_file = save_model_file
         return
@@ -57,7 +57,7 @@ class CorpusToEmbeddings(object):
         cfg_workers = self.model_config.get('workers', 16)
         cfg_alpha = self.model_config.get('alpha', 0.01)
         logger.info('window size:{}, alpha:{}, embedding size:{}, min_count:{}'.format(cfg_window, cfg_alpha, cfg_size, cfg_min_count))
-        self.model = gensim.models.Word2Vec(self.corpus_iter, 
+        self.model = gensim.models.Word2Vec(self.corpus_iter,
                                             size=cfg_size,
                                             window=cfg_window,
                                             min_count=cfg_min_count,

@@ -10,16 +10,18 @@ import numpy as np
 import scipy as sp
 import math
 
-def get_base(unit ='bit'):
+
+def get_base(unit='bit'):
     if unit == 'bit':
         log = sp.log2
     elif unit == 'nat':
-        log = sp.log 
+        log = sp.log
     elif unit in ('digit', 'dit'):
-        log = sp.log10  
+        log = sp.log10
     else:
         raise ValueError('The "unit" "%s" not understood' % unit)
     return log
+
 
 def shannon_entropy(freq, unit='bit'):
     """Calculates the Shannon Entropy (H) of a frequency.
@@ -32,21 +34,22 @@ def shannon_entropy(freq, unit='bit'):
           or 'nat'.
     """
     log = get_base(unit)
-    shape = freq.shape # keep shape to return in right shape
-    Hs = np.ndarray(freq.size / shape[-1]) # place to keep entropies
+    shape = freq.shape  # keep shape to return in right shape
+    Hs = np.ndarray(freq.size / shape[-1])  # place to keep entropies
     # this returns an array of vectors or just a vector of frequencies
-    freq = freq.reshape((-1, shape[-1])) 
+    freq = freq.reshape((-1, shape[-1]))
     # this makes sure we have an array of vectors of frequencies
     freq = np.atleast_2d(freq)
     # get fancy indexing
     positives = freq != 0.
     for i, (freq, idx) in enumerate(izip(freq, positives)):
-        freq = freq[idx] # keep only non-zero
-        logs = [math.log(f, 2) for f in freq] # logarithms of non-zero frequencies
+        freq = freq[idx]  # keep only non-zero
+        logs = [math.log(f, 2) for f in freq]  # logarithms of non-zero frequencies
         Hs[i] = -np.sum(freq * logs)
     Hs.reshape(shape[:-1])
     return Hs
- 
+
+
 def relative_entropy(freq, background, unit='bit'):
     """
     Calculates the Releative Entropy (D), which is the Kullback-Leibler 
@@ -65,8 +68,8 @@ def relative_entropy(freq, background, unit='bit'):
     """
     log = get_base(unit)
     shape = freq.shape
-    freq = freq.reshape((-1, shape[-1]))  
-    freq = np.atleast_2d(freq) 
+    freq = freq.reshape((-1, shape[-1]))
+    freq = np.atleast_2d(freq)
     Dkls = np.ndarray(freq.size / shape[-1])
     positives = (freq != 0.) & (background != 0.)
     for i, (freq, idx) in enumerate(izip(freq, positives)):
@@ -76,6 +79,7 @@ def relative_entropy(freq, background, unit='bit'):
         Dkls[i] = np.sum(freq * logs)
     Dkls.reshape(shape[:-1])
     return Dkls
+
 
 def mutual_information(jointfreq, rowfreq=None, colfreq=None, unit='bit'):
     """
@@ -100,9 +104,10 @@ def mutual_information(jointfreq, rowfreq=None, colfreq=None, unit='bit'):
     non_zero = jointfreq != 0.
     jntf = jointfreq[non_zero]
     indf = indfreq[non_zero]
-    return np.sum(jntf * log(jntf/indf))
+    return np.sum(jntf * log(jntf / indf))
 
-def jensen_shannon_divergence(freq, weights =None, unit='bit'):
+
+def jensen_shannon_divergence(freq, weights=None, unit='bit'):
     """
     Calculates the Jensen-Shannon Divergence (Djs) of two or more frequencies.
     The weights are for the relative contribution of each frequency vector. 

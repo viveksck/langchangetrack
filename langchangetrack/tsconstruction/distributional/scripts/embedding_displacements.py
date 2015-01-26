@@ -26,8 +26,10 @@ logger = logging.getLogger("langchangetrack")
 
 os.system("taskset -p 0xffff %d" % os.getpid())
 
+
 def uniform(distances):
     return np.ones(len(distances))
+
 
 def get_vectors_sg(model, norm_embedding=True):
     """ Return the embeddings of  a skipgram model. """
@@ -36,9 +38,11 @@ def get_vectors_sg(model, norm_embedding=True):
     else:
         return model.syn0
 
+
 def load_model_skipgram(model_path):
     """ Load the skipgram model from a file in word2vec format. """
     return gensim.models.Word2Vec.load_word2vec_format(model_path)
+
 
 def load_predictor_skipgram(predictor_path):
     """ Load the predictor model. """
@@ -46,9 +50,10 @@ def load_predictor_skipgram(predictor_path):
 
 
 class EmbeddingsDisplacements(Displacements):
-    def __init__(self, 
+
+    def __init__(self,
                  data_dir,
-                 pred_dir, 
+                 pred_dir,
                  words_file,
                  timepoints,
                  num_words,
@@ -60,13 +65,12 @@ class EmbeddingsDisplacements(Displacements):
                  fixed_point,
                  embedding_suffix,
                  predictor_suffix):
-                 
         """ Constructor """
         # Initialize the super class.
         super(EmbeddingsDisplacements, self).__init__()
         self.get_vectors = get_vectors
-        self.load_model  = load_model
-        self.has_predictors =  True
+        self.load_model = load_model
+        self.has_predictors = True
         self.load_predictor = load_predictor
         self.norm_embedding = True
         self.words_file = words_file
@@ -85,13 +89,13 @@ class EmbeddingsDisplacements(Displacements):
 
     def calculate_distance(self, vec1, vec2):
         """ Calculate distances between vector1 and vector2. """
-        return [cosine(vec1, vec2), euclidean(vec1,vec2)]
+        return [cosine(vec1, vec2), euclidean(vec1, vec2)]
 
     def load_models_and_predictors(self):
         """ Load all the models and predictors. """
         self.models = {}
         self.predictors = {}
-        model_paths = [path.join(self.data_dir, timepoint+'_embeddings' + self.embedding_suffix) for timepoint in self.timepoints]
+        model_paths = [path.join(self.data_dir, timepoint + '_embeddings' + self.embedding_suffix) for timepoint in self.timepoints]
         predictor_handles = [path.join(self.pred_dir, timepoint + '_embeddings' + self.predictor_suffix) for timepoint in self.timepoints]
         loaded_models = Parallel(n_jobs=16)(delayed(self.load_model)(model_path) for model_path in model_paths)
         for i, timepoint in enumerate(self.timepoints):
@@ -103,7 +107,7 @@ class EmbeddingsDisplacements(Displacements):
         print "Done loading predictors"
 
     def is_present(self, timepoint, word):
-        """ Check if the word is present in the vocabulary at this timepoint. """ 
+        """ Check if the word is present in the vocabulary at this timepoint. """
         model = self.get_model(timepoint)
         return word in model.vocab
 
@@ -111,6 +115,7 @@ class EmbeddingsDisplacements(Displacements):
         """ Get the embedding for this word at the specified timepoint."""
         model = self.get_model(timepoint)
         return self.get_vectors(model, self.norm_embedding)[model.vocab[word].index]
+
 
 def main(args):
     syear = int(args.syear)
@@ -132,14 +137,14 @@ def main(args):
                                 str(args.fixed_point),
                                 args.embedding_suffix,
                                 args.predictor_suffix)
-                                
+
     # Load the models and predictors
     e.load_models_and_predictors()
 
     # Calculate the word displacements and dump.
     L, H, dfo, dfn = e.calculate_words_displacement(column_names=['word', 's', 'otherword', 't', 'cosine', 'euclidean'])
     fname = 'timeseries_s_t' + '_' + args.outputsuffix + '.pkl'
-    pickle.dump((L,H, dfo, dfn), open(path.join(args.outputdir, fname),'wb'))
+    pickle.dump((L, H, dfo, dfn), open(path.join(args.outputdir, fname), 'wb'))
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -149,15 +154,15 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output_dir", dest="outputdir", help="Output directory")
     parser.add_argument("-os", "--output_suffix", dest="outputsuffix", help="Output suffix")
     parser.add_argument("-es", "--emb_suffix", dest="embedding_suffix", help="embedding suffix")
-    parser.add_argument("-ps", "--pred_suffix", dest="predictor_suffix",help="predictor suffix")
-    parser.add_argument("-sy", "--start", dest="syear", default = '1800', help="start year")
-    parser.add_argument("-ey", "--end", dest="eyear", default = '2010', help="end year(not included)")
-    parser.add_argument("-s", "--window_size", dest="stepsize", default = 5, help="Window size for time series")
-    parser.add_argument("-e", "--embedding_type", dest="embedding_type", default = 'skipgram',  help="Embedding type")
+    parser.add_argument("-ps", "--pred_suffix", dest="predictor_suffix", help="predictor suffix")
+    parser.add_argument("-sy", "--start", dest="syear", default='1800', help="start year")
+    parser.add_argument("-ey", "--end", dest="eyear", default='2010', help="end year(not included)")
+    parser.add_argument("-s", "--window_size", dest="stepsize", default=5, help="Window size for time series")
+    parser.add_argument("-e", "--embedding_type", dest="embedding_type", default='skipgram',  help="Embedding type")
     parser.add_argument("-m", "--method", dest="method", default="polar", help="Method to use")
     parser.add_argument("-w", "--win_size", dest="win_size", default="-1", help="Window size to use if not polar", type=int)
     parser.add_argument("-y", "--fixed_point", dest="fixed_point", default="-1", help="fixed point to use if method is fixed", type=int)
-    parser.add_argument("-n", "--num_words", dest="num_words", default = -1, help="Number of words", type=int)
+    parser.add_argument("-n", "--num_words", dest="num_words", default=-1, help="Number of words", type=int)
     logging.basicConfig(level=logging.INFO, format=LOGFORMAT)
     args = parser.parse_args()
     main(args)

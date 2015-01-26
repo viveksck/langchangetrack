@@ -14,7 +14,7 @@ import pandas as pd
 import more_itertools
 from joblib import Parallel, delayed
 
-from langchangetrack.utils.dummy_regressor import DummyRegressor 
+from langchangetrack.utils.dummy_regressor import DummyRegressor
 import gensim
 
 import logging
@@ -23,10 +23,12 @@ logger = logging.getLogger("langchangetrack")
 
 os.system("taskset -p 0xffff %d" % os.getpid())
 
+
 def normalize_vector(vec):
     """ Normalize a vector by its L2 norm. """
-    norm = (vec ** 2).sum() ** 0.5 
+    norm = (vec ** 2).sum() ** 0.5
     return (vec / norm)
+
 
 def pairwise(iterable):
     """ [a,b,c,d]=>[(a,b), (b,c), (c, d)] """
@@ -34,13 +36,16 @@ def pairwise(iterable):
     next(b, None)
     return itertools.izip(a, b)
 
+
 def process_word_source(w, eobj):
     """ Calculate displacements of word for source timepoint tuples. """
     return eobj.process_word(w, 0)
 
+
 def process_word_dest(w, eobj):
     """ Calculate displacements of word for destination timepoint tuples."""
     return eobj.process_word(w, 1)
+
 
 def process_chunk(chunk, func, *args):
     """ Apply a function on each element of a iterable. """
@@ -51,13 +56,15 @@ def process_chunk(chunk, func, *args):
             print "Processing chunk", i
     return L
 
+
 class Displacements(object):
+
     def __init__(self):
         """ Constructor """
         self.get_vectors = None
-        self.load_model  = None
+        self.load_model = None
         self.models = {}
-        self.has_predictors =  False
+        self.has_predictors = False
         self.load_predictor = None
         self.predictors = {}
         self.norm_embedding = False
@@ -77,7 +84,7 @@ class Displacements(object):
         """
 
         words_list = open(self.words_file, 'r').read().split('\n')
-        if words_list[-1] == '': 
+        if words_list[-1] == '':
             words_list = words_list[:-1]
         if self.num_words != -1:
             return words_list[:num_words]
@@ -101,14 +108,14 @@ class Displacements(object):
                 timepoint1 = tup[1]
                 word2 = tup[2]
                 timepoint2 = tup[3]
-            
+
                 if self.is_present(timepoint1, word1) and self.is_present(timepoint2, word2):
                     vec1 = self.get_vector(timepoint1, word1)
                     vec2 = self.get_vector(timepoint2, word2)
 
                     if self.norm_embedding:
-                        assert(np.isclose(norm(vec1),1.0))
-                        assert(np.isclose(norm(vec2),1.0))
+                        assert(np.isclose(norm(vec1), 1.0))
+                        assert(np.isclose(norm(vec2), 1.0))
 
                     vec1_pred = modelo.predict(vec1)
                     vec2_pred = modeln.predict(vec2)
@@ -116,14 +123,14 @@ class Displacements(object):
                     if self.norm_embedding:
                         vec1_pred = normalize_vector(vec1_pred)
                         vec2_pred = normalize_vector(vec2_pred)
-                        assert(np.isclose(norm(vec1),1.0))
-                        assert(np.isclose(norm(vec2),1.0))
- 
+                        assert(np.isclose(norm(vec1), 1.0))
+                        assert(np.isclose(norm(vec2), 1.0))
+
                     d = self.calculate_distance(vec1_pred, vec2_pred)
                     assert(len(d) == self.number_distance_metrics())
                     L.append([word1, timepoint1, word2, timepoint2] + d)
                 else:
-                    #Word is not present in both time periods
+                    # Word is not present in both time periods
                     L.append([word1, timepoint1, word2, timepoint2] + list(itertools.repeat(np.nan, self.number_distance_metrics())))
         return L
 
@@ -139,13 +146,13 @@ class Displacements(object):
         # used.
         if self.method == "polar":
             timepoints1 = zip(timepoints_considered, list(itertools.repeat(timepoints_considered[0], len(timepoints_considered))))
-            timepoints2 = zip(timepoints_considered, list(itertools.repeat(timepoints_considered[-1],len(timepoints_considered))))
+            timepoints2 = zip(timepoints_considered, list(itertools.repeat(timepoints_considered[-1], len(timepoints_considered))))
         elif self.method == 'win':
             timepoints1 = zip(timepoints_considered[win_size:], timepoints_considered[:-win_size])
-            timepoints2 = zip(timepoints_considered[:-win_size],timepoints_considered[win_size:])
+            timepoints2 = zip(timepoints_considered[:-win_size], timepoints_considered[win_size:])
         elif self.method == 'fixed':
             timepoints1 = zip(timepoints_considered, list(itertools.repeat(fixed_point, len(timepoints_considered))))
-            timepoints2 = zip(timepoints_considered, list(itertools.repeat(timepoints_considered[-1],len(timepoints_considered))))
+            timepoints2 = zip(timepoints_considered, list(itertools.repeat(timepoints_considered[-1], len(timepoints_considered))))
 
         # Return the list if tuples
         return timepoints1, timepoints2
@@ -181,7 +188,7 @@ class Displacements(object):
             nice Pandas data frame. """
         dfo = pd.DataFrame()
         dfo = dfo.from_records(L, columns=column_names)
-        dfo_clean =dfo.fillna(method='ffill')
+        dfo_clean = dfo.fillna(method='ffill')
         dfn = pd.DataFrame()
         dfn = dfn.from_records(H, columns=column_names)
         dfn_clean = dfn.fillna(method='bfill')
@@ -207,10 +214,9 @@ class Displacements(object):
         raise NotImplementedError, "Pure virtual function"
 
     def is_present(self, timepoint, word):
-        """ Check if the word is present in the vocabulary at this timepoint. """ 
+        """ Check if the word is present in the vocabulary at this timepoint. """
         raise NotImplementedError, "Pure virtual function"
 
     def get_vector(self, timepoint, word):
         """ Get the embedding for this word at the specified timepoint."""
         raise NotImplementedError, "Pure virtual function"
-
