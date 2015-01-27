@@ -23,6 +23,18 @@ Features
 * This package provides tools to detect linguistic change in a temporal corpora. 
 * We do this by capturing linguistic change through different methods. 
 
+Usage
+------
+
+    cd examples/distributional/
+    ./ngrams_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 locallinear 100 1000 "ngrams" ../data/temporal_corpus/common_vocab.txt 10
+
+    cd examples/pos
+    ./pos_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 1930 5 ../data/temporal_corpus/common_vocab.txt 10
+
+    cd examples/freq
+    ./freq_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 ../data/temporal_corpus/common_vocab.txt 10
+
 Requirements
 ------------
 * wheel==0.23.0

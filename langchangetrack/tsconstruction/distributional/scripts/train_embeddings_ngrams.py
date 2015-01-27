@@ -22,6 +22,12 @@ __email__ = "viveksck@gmail.com"
 
 LOGFORMAT = "%(asctime).19s %(levelname)s %(filename)s: %(lineno)s %(message)s"
 
+import psutil
+from multiprocessing import cpu_count
+
+p = psutil.Process(os.getpid())
+p.set_cpu_affinity(list(range(cpu_count())))
+
 
 class RepeatCorpusNTimes(object):
 

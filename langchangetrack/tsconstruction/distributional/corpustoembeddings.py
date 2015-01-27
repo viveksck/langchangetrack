@@ -56,7 +56,7 @@ class CorpusToEmbeddings(object):
         cfg_min_count = self.model_config.get('min_count', 10)
         cfg_workers = self.model_config.get('workers', 16)
         cfg_alpha = self.model_config.get('alpha', 0.01)
-        logger.info('window size:{}, alpha:{}, embedding size:{}, min_count:{}'.format(cfg_window, cfg_alpha, cfg_size, cfg_min_count))
+        logger.info('window size:{}, alpha:{}, embedding size:{}, min_count:{}, workers:{}'.format(cfg_window, cfg_alpha, cfg_size, cfg_min_count, cfg_workers))
         self.model = gensim.models.Word2Vec(self.corpus_iter,
                                             size=cfg_size,
                                             window=cfg_window,

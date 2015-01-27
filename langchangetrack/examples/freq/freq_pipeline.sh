@@ -5,10 +5,11 @@ STARTTIMEPOINT=$4
 ENDTIMEPOINT=$5
 STEP=$6
 FILTER_VOCAB_FILE=$7
+WORKERS=$8
 EXT=ngrams
 mkdir -p $WORKING_DIR
 mkdir -p $OUTPUT_DIR
 
 mkdir -p $WORKING_DIR/counts/
-ls $CORPUS_DIR/*.$EXT | parallel -j16 "freq_count.py -f {} > $WORKING_DIR/counts/{/.}.freq"
-detect_cp_freq.sh $WORKING_DIR/counts/ $WORKING_DIR $OUTPUT_DIR $STARTTIMEPOINT $ENDTIMEPOINT $STEP $FILTER_VOCAB_FILE
+ls $CORPUS_DIR/*.$EXT | parallel -j${WORKERS} "freq_count.py -f {} > $WORKING_DIR/counts/{/.}.freq"
+detect_cp_freq.sh $WORKING_DIR/counts/ $WORKING_DIR $OUTPUT_DIR $STARTTIMEPOINT $ENDTIMEPOINT $STEP $FILTER_VOCAB_FILE $WORKERS

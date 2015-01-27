@@ -9,6 +9,7 @@ KNN=$8
 NUMWORDS=$9
 EXT=${10}
 FILTER_VOCAB_FILE=${11}
+WORKERS=${12}
 EMBEDDINGS_TYPE=skipgram
 
 arr=("$CORPUS_DIR/*.$EXT")
@@ -21,6 +22,6 @@ mkdir -p $OUTPUT_DIR
 echo "Training embeddings"
 mkdir -p $WORKING_DIR/models
 echo "Models will be stored in", $WORKING_DIR/models
-#parallel -vv -j 16 --progress train_embeddings_ngrams.py -f {} -o $WORKING_DIR/models -p {/.} -e $EMBEDDINGS_TYPE ::: $arr
+parallel -vv -j ${WORKERS} --progress train_embeddings_ngrams.py -f {} -o $WORKING_DIR/models -p {/.} -e $EMBEDDINGS_TYPE -workers ${WORKERS} ::: $arr
 
-detect_cp_distributional.sh $WORKING_DIR/models/ $WORKING_DIR $OUTPUT_DIR $STARTTIMEPOINT $ENDTIMEPOINT $STEP "locallinear" 100 1000 $FILTER_VOCAB_FILE
+detect_cp_distributional.sh $WORKING_DIR/models/ $WORKING_DIR $OUTPUT_DIR $STARTTIMEPOINT $ENDTIMEPOINT $STEP "locallinear" 100 1000 $FILTER_VOCAB_FILE ${WORKERS}
