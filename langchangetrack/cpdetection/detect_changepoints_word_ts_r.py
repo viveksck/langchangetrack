@@ -66,7 +66,7 @@ def get_actual_cp(df, cp_idx):
     # Add 1 as the first column is word.
     return df.columns[cp_idx + 1]
 
-def get_pval_word_chunk(chunk, df): 
+def get_pval_word_chunk(chunk, df, threshold = None): 
     """ 
     Process each word in a chunk and return pvalue and changepoint.
     Here we set R changepoint class = FALSE which return pvalue.
@@ -81,7 +81,7 @@ def get_pval_word_chunk(chunk, df):
     return results
 
 
-def get_cp_word_chunk(chunk, df): 
+def get_cp_word_chunk(chunk, df, threshold = None): 
     """ 
     Process each word in a chunk and return changepoints. Does not return 
     pvalue. 
@@ -108,6 +108,10 @@ def main(args):
     should_normalize = not(args.dont_normalize)
     n_jobs = int(args.workers)
     cp_pval = args.dump_pval
+    if args.threshold != None:
+        threshold = float(args.threshold)
+    else:
+        threshold = None
 
     print "CONFIG:"
     print "FILENAME:", df_f
@@ -115,6 +119,7 @@ def main(args):
     print "PVAL_FILE:", pval_file
     print "COL TO DROP:", col_to_drop
     print "NORMALIZE:", should_normalize
+    print "Threshold", threshold
 
     # Read the time series data
     df = pd.read_csv(df_f)
@@ -141,10 +146,13 @@ def main(args):
     cwords = norm_df.word.values
     print "Number of words we are processing", len(cwords)
 
-    chunksz = len(cwords)/n_jobs
+    chunksz = np.ceil(len(cwords)/float(n_jobs))
     if cp_pval: 
-        results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=chunksz, n_jobs=n_jobs, df = norm_df)
+        results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=chunksz, n_jobs=n_jobs, df = norm_df, threshold = threshold)
         cps, pvals = zip(*results)
+        # R returns 1 for a very high stat significance. So we invert it as for
+        # us low pvalues mean more significance.
+        pvals = [(1.0 - pval) for pval in pvals]
         actual_cps = [get_actual_cp(norm_df, cp) for cp in cps]
         results = zip(cwords, actual_cps, pvals)
         header = ['word', 'cp', 'pval']
@@ -171,6 +179,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dont_normalize", dest="dont_normalize", action='store_true', default = False, help="Dont normalize")
     parser.add_argument("-w", "--workers", dest="workers", default=1, type=int, help="Number of workers to use")
     parser.add_argument("-dump_pval", "--dump_pval", dest="dump_pval",default=False, action='store_true', help="Dump pvalue or not")
+    parser.add_argument("-t", "--threshold", dest="threshold", default=None, type=float, help="threshold")
     parser.add_argument("-l", "--log", dest="log", help="log verbosity level", default="INFO")
     args = parser.parse_args()
     if args.log == 'DEBUG':

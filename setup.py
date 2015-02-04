@@ -71,6 +71,7 @@ setup(
         'langchangetrack/tsconstruction/distributional/scripts/embedding_displacements.py',
         'langchangetrack/tsconstruction/dump_timeseries.py',
         'langchangetrack/cpdetection/detect_changepoints_word_ts.py',
+        'langchangetrack/cpdetection/detect_changepoints_word_ts_r.py',
         'langchangetrack/scripts/detect_cp_freq.sh',
         'langchangetrack/scripts/detect_cp_pos.sh',
         'langchangetrack/scripts/detect_cp_distributional.sh',
