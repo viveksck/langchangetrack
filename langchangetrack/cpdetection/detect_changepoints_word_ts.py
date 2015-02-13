@@ -180,7 +180,7 @@ def main(args):
     cwords = norm_df.word.values
     print "Number of words we are analyzing:", len(cwords)
 
-    chunksz = np.ceil(len(cwords) / workers)
+    chunksz = np.ceil(len(cwords) / float(workers))
     results = parallelize_func(cwords[:], get_pval_word_chunk, chunksz=chunksz, n_jobs=workers, df=norm_df, B=args.B)
 
     pvals, num_samples = zip(*results)
