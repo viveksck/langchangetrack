@@ -50,13 +50,15 @@ Requirements
 * textblob>=0.9.0
 * textblob-aptagger>=0.2.0
 * psutil>=2.2.0
-
-* GNU Parallel, R
+* GNU Parallel
+* R (good to have)
+* rpy2 (good to have)
 
 
 
 Installation
 ------------
+#. Install GNU Parallel from here:  www.gnu.org/software/software.html
 #. cd langchangetrack
 #. pip install -r requirements.txt 
 #. python setup.py install
