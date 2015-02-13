@@ -1,3 +1,4 @@
+#!/bin/bash
 INPUT_DIR=$1
 WORKING_DIR=$2
 OUTPUT_DIR=$3
