@@ -7,9 +7,8 @@ ENDTIMEPOINT=$5
 STEP=$6
 MODEL_FAMILY=$7
 KNN=$8
-NUMWORDS=$9
-FILTER_VOCAB_FILE=${10}
-WORKERS=${11}
+FILTER_VOCAB_FILE=${9}
+WORKERS=${10}
 
 EMBEDDINGS_TYPE=skipgram
 echo "Output directory is", $OUTPUT_DIR
@@ -24,11 +23,7 @@ arr=("$INPUT_DIR/*.model")
 ((FINALTIMEPOINT=$ENDTIMEPOINT-$STEP))
 parallel -j${WORKERS} learn_map.py -k ${KNN} -f $WORKING_DIR/predictors/{/.}.predictor -o {} -n {//}/${FINALTIMEPOINT}_*.model -m $MODEL_FAMILY ::: $arr
 
-echo "Creating words file"
-WORDS_FILE=$WORKING_DIR/words.txt
-((NUMLINES = NUMWORDS + 1)) 
-cut -f 1 -d' ' $INPUT_DIR/${FINALTIMEPOINT}_*.model | head -n $NUMLINES > $WORDS_FILE
-sed '1d' $WORDS_FILE | sponge $WORDS_FILE
+WORDS_FILE=${FILTER_VOCAB_FILE}
 
 echo "Computing displacements"
 mkdir -p $WORKING_DIR/displacements/

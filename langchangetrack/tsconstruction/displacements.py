@@ -172,7 +172,7 @@ class Displacements(object):
 
         words = self.get_word_list()
         # Create chunks of the words to be processed.
-        chunk_sz = np.ceil(len(words)/n_jobs)
+        chunk_sz = np.ceil(len(words)/float(n_jobs))
         chunks = list(more_itertools.chunked(words, chunk_sz))
 
         # Calculate the displacements

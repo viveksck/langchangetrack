@@ -22,11 +22,9 @@ def main(args):
     train_cmd = "./train_models.sh {} {} {} {}".format(args.corpus_dir, args.working_dir, args.ext, args.workers)
     subprocess.check_call(train_cmd, shell=True)
 
-    cmd = "detect_cp_distributional.sh {} {} {} {} {} {} {} {} {} {} {}"
+    cmd = "detect_cp_distributional.sh {} {} {} {} {} {} {} {} {} {}"
     input_dir = path.join(args.working_dir, 'models')
-    cmd = cmd.format(input_dir, args.working_dir, args.output_dir, args.start,
-                     args.end, args.step, args.model_family, args.knn,
-                     args.topk, args.vocab_file, args.workers)
+    cmd = cmd.format(input_dir, args.working_dir, args.output_dir, args.start, args.end, args.step, args.model_family, args.knn, args.vocab_file, args.workers)
     subprocess.check_call(cmd, shell=True)
 
 if __name__ == "__main__":
@@ -41,7 +39,6 @@ if __name__ == "__main__":
     parser.add_argument("--model-family", dest="model_family", default="locallinear", help="Model family default (locallinear)")
     parser.add_argument("--number-nearest-neighbors", dest="knn", default=1000,
                         type=int, help="Number of nearest neighbors to use for mapping to joint space (default:1000)")
-    parser.add_argument("--top-k-words", dest="topk", default=5000, type=int, help="Compute displacements for top K words only")
     parser.add_argument("--vocabulary-file", dest="vocab_file", help="Common vocabulary file")
     parser.add_argument("--workers", dest="workers", default=1, type=int, help="Maximum number of workers")
     parser.add_argument("-l", "--log", dest="log", help="log verbosity level",

@@ -114,7 +114,7 @@ def main(args):
 
     # Construct the series
     assert(len(sourcexinter) == len(destxinter))
-    chunk_sz = np.ceil(len(words)/n_jobs)
+    chunk_sz = np.ceil(len(words)/float(n_jobs))
     words_chunks = more_itertools.chunked(words, chunk_sz)
     timeseries_chunks = Parallel(n_jobs=n_jobs, verbose=20)(delayed(process_chunk)(chunk, create_word_time_series, olddf, newdf,
                                                                                sourcexinter, destxinter,
