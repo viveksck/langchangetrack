@@ -24,7 +24,7 @@ def main(args):
 
     cmd = "detect_cp_distributional.sh {} {} {} {} {} {} {} {} {} {} {} {}"
     input_dir = path.join(args.working_dir, 'models')
-    cmd = cmd.format(input_dir, args.working_dir, args.output_dir, args.start, args.end, args.step, args.model_family, args.knn, args.vocab_file,args.bootstrap, args.threshold, args.workers)
+    cmd = cmd.format(input_dir, args.working_dir, args.output_dir, args.start, args.end, args.step, args.model_family, args.knn, args.vocab_file, args.bootstrap, args.threshold, args.workers)
     subprocess.check_call(cmd, shell=True)
 
 if __name__ == "__main__":
