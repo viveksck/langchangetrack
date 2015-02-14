@@ -12,7 +12,7 @@ langchangetrack
         :target: https://pypi.python.org/pypi/langchangetrack
 
 
-Package for statistically significant language change.
+Package for Statistically Significant Language Change.
 
 * Free software: BSD license
 * Documentation: https://langchangetrack.readthedocs.org.
@@ -20,8 +20,15 @@ Package for statistically significant language change.
 Features
 --------
 
-* This package provides tools to detect linguistic change in a temporal corpora. 
-* We do this by capturing linguistic change through different methods. 
+* This package provides tools to detect linguistic change in temporal corpora. 
+
+* The meta algorithm works in 2 main steps
+
+    #. **Time series construction**:Given a word, we construct a time series that tracks the displacement of a word through time. We track the displacement of a word using either Frequency, Part of Speech Distribution or Co-occurrences.
+
+    #. **Change point detection**: We then use change point detection methods to detect if the time series contains a change point and if so what the change point is.
+
+The details of the above steps are outlined in : http://arxiv.org/abs/1411.3315
 
 Usage
 ------
