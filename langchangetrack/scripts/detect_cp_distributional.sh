@@ -8,7 +8,9 @@ STEP=$6
 MODEL_FAMILY=$7
 KNN=$8
 FILTER_VOCAB_FILE=${9}
-WORKERS=${10}
+BOOTSTRAP=${10}
+THRESHOLD=${11}
+WORKERS=${12}
 
 EMBEDDINGS_TYPE=skipgram
 echo "Output directory is", $OUTPUT_DIR
@@ -37,4 +39,4 @@ echo "Creating time series"
 mkdir -p $WORKING_DIR/timeseries/
 dump_timeseries.py -f $WORKING_DIR/displacements/timeseries_s_t_words.pkl -s $WORKING_DIR/timeseries/source.csv -e $WORKING_DIR/timeseries/dest.csv -m $STARTTIMEPOINT -n $ENDTIMEPOINT -st $STEP -me "polar" -metric "cosine" -workers ${WORKERS}
 
-detect_changepoints_word_ts.py -f $WORKING_DIR/timeseries/source.csv -v $FILTER_VOCAB_FILE -p $OUTPUT_DIR/pvals.csv -n $OUTPUT_DIR/samples.csv -c $STARTTIMEPOINT -w ${WORKERS}
+detect_changepoints_word_ts.py -f $WORKING_DIR/timeseries/source.csv -v $FILTER_VOCAB_FILE -p $OUTPUT_DIR/pvals.csv -n $OUTPUT_DIR/samples.csv -c $STARTTIMEPOINT -w ${WORKERS} -b ${BOOTSTRAP} -t ${THRESHOLD}

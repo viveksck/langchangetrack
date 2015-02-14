@@ -75,6 +75,8 @@ setup(
         'langchangetrack/scripts/detect_cp_freq.sh',
         'langchangetrack/scripts/detect_cp_pos.sh',
         'langchangetrack/scripts/detect_cp_distributional.sh',
+        'langchangetrack/scripts/train_models.sh',
+        'langchangetrack/scripts/ngrams_pipeline.py',
         'langchangetrack/utils/scripts/freq_count.py',
         'langchangetrack/utils/scripts/common_vocab.py',
     ],
