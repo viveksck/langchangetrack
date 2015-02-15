@@ -194,6 +194,8 @@ def main(args):
     pvalue_df_final['min_pval'], pvalue_df_final['cp'] = zip(*pvalue_df.apply(get_minpval_cp, axis=1))
     pvalue_df_final['tpval'], pvalue_df_final['tcp'] = zip(*pvalue_df.apply(get_cp_pval, axis=1, zscore_df=norm_df, threshold=threshold))
 
+    pvalue_df_final.drop(norm_df.columns[TS_OFFSET:len(pvals[0]) + 1], axis=1, inplace = True)
+
     # Write the pvalue output.
     num_samples_df = pd.DataFrame().from_records(list(num_samples), columns=header)
     num_samples_df.to_csv(sample_file, encoding='utf-8')
