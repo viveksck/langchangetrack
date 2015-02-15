@@ -87,6 +87,60 @@ optional arguments:
                         Number of bootstrap samples to draw (default: 1000)
   --workers WORKERS     Maximum number of workers (default: 1)
   -l LOG, --log LOG     log verbosity level
+ 
+
+**Usage: pos_pipeline.py**
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus-dir CORPUS_DIR
+                        Corpus directory
+  --file-extension EXT  Corpus file extension
+  --working-dir WORKING_DIR
+                        Working directory
+  --output-dir OUTPUT_DIR
+                        Output directory
+  --start-time-point START
+                        Start time point
+  --end-time-point END  End time point
+  --step-size STEP      Step size for timepoints
+  --vocabulary-file VOCAB_FILE
+                        Common vocabulary file
+  --threshold THRESHOLD
+                        Threshold for mean shift model for change point
+                        detection
+  --bootstrap-samples BOOTSTRAP
+                        Number of bootstrap samples to draw
+  --workers WORKERS     Maximum number of workers
+  -l LOG, --log LOG     log verbosity level
+  
+ 
+ **usage: freq_pipeline.py**
+ 
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus-dir CORPUS_DIR
+                        Corpus directory
+  --file-extension EXT  Corpus file extension
+  --working-dir WORKING_DIR
+                        Working directory
+  --output-dir OUTPUT_DIR
+                        Output directory
+  --start-time-point START
+                        Start time point
+  --end-time-point END  End time point
+  --step-size STEP      Step size for timepoints
+  --vocabulary-file VOCAB_FILE
+                        Common vocabulary file
+  --threshold THRESHOLD
+                        Threshold for mean shift model for change point
+                        detection
+  --bootstrap-samples BOOTSTRAP
+                        Number of bootstrap samples to draw
+  --workers WORKERS     Maximum number of workers
+  -l LOG, --log LOG     log verbosity level
+
+
 
 Requirements
 ------------
