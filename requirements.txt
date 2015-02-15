@@ -5,6 +5,7 @@ scipy>=0.15.1
 more_itertools>=2.2
 joblib>=0.8.3-r1
 gensim==0.10.3
+six>=1.7.0
 statsmodels>=0.5.0
 changepoint>=0.1.0
 nltk>=3.0.0
