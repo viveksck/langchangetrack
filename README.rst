@@ -52,6 +52,7 @@ Sample Usage
 
 ``$freq_pipeline.py --corpus-dir data/temporal_corpus/ --file-extension "ngrams" --working-dir ./working --output-dir ./output --start-time-point 1900 --end-time-point 2000 --step-size 5 --vocabulary-file data/temporal_corpus/common_vocab.txt --workers 16``
 
+**You might need to tune the hyper parameters as per your specific need.**
 
 Detailed Usage
 ---------------
