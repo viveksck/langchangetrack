@@ -32,6 +32,12 @@ Features
 
 The details of the above steps are outlined in : http://arxiv.org/abs/1411.3315
 
+
+Visualization Demo
+-------------------
+
+Please see this for a cool visualization of words moving through time: http://tinyurl.com/wordvis
+
 Usage
 ------
     
