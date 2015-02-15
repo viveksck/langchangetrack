@@ -12,7 +12,7 @@ langchangetrack
         :target: https://pypi.python.org/pypi/langchangetrack
 
 
-Package for statistically significant language change.
+Package for Statistically Significant Language Change.
 
 * Free software: BSD license
 * Documentation: https://langchangetrack.readthedocs.org.
@@ -20,20 +20,32 @@ Package for statistically significant language change.
 Features
 --------
 
-* This package provides tools to detect linguistic change in a temporal corpora. 
-* We do this by capturing linguistic change through different methods. 
+* This package provides tools to detect linguistic change in temporal corpora. 
+
+* The meta algorithm works in 2 main steps
+
+    #. **Time series construction**:Given a word, we construct a time series that tracks the displacement of a word through time. We track the displacement of a word using either Frequency, Part of Speech Distribution or Co-occurrences.
+
+    #. **Change point detection**: We then use change point detection methods to detect if the time series contains a change point and if so what the change point is.
+
+The details of the above steps are outlined in : http://arxiv.org/abs/1411.3315
 
 Usage
 ------
+    
+Input
+------
 
-    cd examples/distributional/
-    ./ngrams_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 locallinear 100 1000 "ngrams" ../data/temporal_corpus/common_vocab.txt 10
+We assume a temporal corpus of text files (appropriately tokenized) to be present in a directory. In addition we assume list of words in a single text file that one is interested in tracking. 
+This could just be the set of words in the common vocabulary of the temporal corpus.
 
-    cd examples/pos
-    ./pos_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 1930 5 ../data/temporal_corpus/common_vocab.txt 10
+Output
+------
 
-    cd examples/freq
-    ./freq_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 ../data/temporal_corpus/common_vocab.txt 10
+The output consists of the pvalues for each word indicating the significance of the changepoint detected.
+
+Sample Usage
+------------
 
 Requirements
 ------------
