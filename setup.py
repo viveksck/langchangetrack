@@ -19,7 +19,7 @@ requirements = [
     'joblib>=0.8.3-r1',
     'gensim==0.10.3',
     'statsmodels>=0.5.0',
-    'changepoint>=0.1.0',
+    'changepoint>=0.1.1',
     'nltk>=3.0.0',
     'textblob>=0.9.0',
     'textblob-aptagger>=0.2.0',
