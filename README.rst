@@ -46,6 +46,102 @@ The output consists of the pvalues for each word indicating the significance of 
 
 Sample Usage
 ------------
+``$ngrams_pipeline.py --corpus-dir data/temporal_corpus/ --file-extension "ngrams" --working-dir ./working --output-dir ./output --context-size 5 --epochs 3 --start-time-point 1900 --end-time-point 2000 --step-size 5 --vocabulary-file data/temporal_corpus/common_vocab.txt --workers 16``
+
+``$pos_pipeline.py --corpus-dir data/temporal_corpus/ --file-extension "ngrams" --working-dir ./working --output-dir ./output --start-time-point 1900 --end-time-point 1930 --step-size 5 --vocabulary-file data/temporal_corpus/common_vocab.txt --workers 16``
+
+``$freq_pipeline.py --corpus-dir data/temporal_corpus/ --file-extension "ngrams" --working-dir ./working --output-dir ./output --start-time-point 1900 --end-time-point 2000 --step-size 5 --vocabulary-file data/temporal_corpus/common_vocab.txt --workers 16``
+
+**You might need to tune the hyper parameters as per your specific need.**
+
+Detailed Usage
+---------------
+**Usage: ngrams_pipeline.py**
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus-dir CORPUS_DIR
+                        Corpus directory
+  --file-extension EXT  Corpus file extension
+  --working-dir WORKING_DIR
+                        Working directory
+  --output-dir OUTPUT_DIR
+                        Output directory
+  --context-size WINDOW
+                        Context size to use for training embeddings
+  --epochs EPOCHS       Number of epochs to training embeddings
+  --start-time-point START
+                        Start time point
+  --end-time-point END  End time point
+  --step-size STEP      Step size for timepoints
+  --model-family MODEL_FAMILY
+                        Model family default (locallinear)
+  --number-nearest-neighbors KNN 
+                        Number of nearest neighbors to use for mapping to
+                        joint space (default:1000)
+                          --vocabulary-file VOCAB_FILE
+                        Common vocabulary file
+  --threshold THRESHOLD
+                        Threshold for mean shift model for change point
+                        detection (default: 1.75)
+  --bootstrap-samples BOOTSTRAP
+                        Number of bootstrap samples to draw (default: 1000)
+  --workers WORKERS     Maximum number of workers (default: 1)
+  -l LOG, --log LOG     log verbosity level
+ 
+
+**Usage: pos_pipeline.py**
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus-dir CORPUS_DIR
+                        Corpus directory
+  --file-extension EXT  Corpus file extension
+  --working-dir WORKING_DIR
+                        Working directory
+  --output-dir OUTPUT_DIR
+                        Output directory
+  --start-time-point START
+                        Start time point
+  --end-time-point END  End time point
+  --step-size STEP      Step size for timepoints
+  --vocabulary-file VOCAB_FILE
+                        Common vocabulary file
+  --threshold THRESHOLD
+                        Threshold for mean shift model for change point
+                        detection
+  --bootstrap-samples BOOTSTRAP
+                        Number of bootstrap samples to draw
+  --workers WORKERS     Maximum number of workers
+  -l LOG, --log LOG     log verbosity level
+  
+ 
+ **usage: freq_pipeline.py**
+ 
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus-dir CORPUS_DIR
+                        Corpus directory
+  --file-extension EXT  Corpus file extension
+  --working-dir WORKING_DIR
+                        Working directory
+  --output-dir OUTPUT_DIR
+                        Output directory
+  --start-time-point START
+                        Start time point
+  --end-time-point END  End time point
+  --step-size STEP      Step size for timepoints
+  --vocabulary-file VOCAB_FILE
+                        Common vocabulary file
+  --threshold THRESHOLD
+                        Threshold for mean shift model for change point
+                        detection
+  --bootstrap-samples BOOTSTRAP
+                        Number of bootstrap samples to draw
+  --workers WORKERS     Maximum number of workers
+  -l LOG, --log LOG     log verbosity level
+
+
 
 Requirements
 ------------
