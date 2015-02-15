@@ -32,15 +32,20 @@ The details of the above steps are outlined in : http://arxiv.org/abs/1411.3315
 
 Usage
 ------
+    
+Input
+------
 
-    cd examples/distributional/
-    ./ngrams_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 locallinear 100 1000 "ngrams" ../data/temporal_corpus/common_vocab.txt 10
+We assume a temporal corpus of text files (appropriately tokenized) to be present in a directory. In addition we assume list of words in a single text file that one is interested in tracking. 
+This could just be the set of words in the common vocabulary of the temporal corpus.
 
-    cd examples/pos
-    ./pos_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 1930 5 ../data/temporal_corpus/common_vocab.txt 10
+Output
+------
 
-    cd examples/freq
-    ./freq_pipeline.sh ../data/temporal_corpus/ ./working/ ./output/ 1900 2000 5 ../data/temporal_corpus/common_vocab.txt 10
+The output consists of the pvalues for each word indicating the significance of the changepoint detected.
+
+Sample Usage
+------------
 
 Requirements
 ------------
