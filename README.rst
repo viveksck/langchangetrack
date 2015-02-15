@@ -11,9 +11,7 @@ langchangetrack
 .. image:: https://pypip.in/d/langchangetrack/badge.png
         :target: https://pypi.python.org/pypi/langchangetrack
         
-        
-
-.. image:: https://github.com/viveksck/langchangetrack/blob/master/langchangetrack/images/gay_invisible.svg
+.. image:: https://github.com/viveksck/langchangetrack/blob/master/langchangetrack/images/gay_invisible.svg?raw=true
 
 
 Package for Statistically Significant Language Change.
