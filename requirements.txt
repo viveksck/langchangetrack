@@ -11,3 +11,4 @@ changepoint>=0.1.0
 nltk>=3.0.0
 textblob>=0.9.0
 textblob-aptagger>=0.2.0
+psutil>=2.1.1

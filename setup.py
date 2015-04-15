@@ -23,6 +23,7 @@ requirements = [
     'nltk>=3.0.0',
     'textblob>=0.9.0',
     'textblob-aptagger>=0.2.0',
+    'psutil>=2.1.1',
 ]
 
 test_requirements = [
