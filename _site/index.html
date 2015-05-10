@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Statistically Significant Detection of Linguistic Change</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="Linguistic change">
+  <link rel="stylesheet" href="combo.css">
+  <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+</head>
+<body>
+  <div id="main">
+
+    <nav><ul>
+      
+        
+        <li class="p-intro"><a href="#intro">Abstract</a></li>
+      
+        
+        <li class="p-why"><a href="#why">Code</a></li>
+      
+        
+        <li class="p-details"><a href="#details">Resources</a></li>
+      
+        
+        <li class="p-usage"><a href="#usage">Citing</a></li>
+      
+    </ul></nav>
+
+
+    
+      
+      <div id="intro" class="section p-intro">
+        
+        <div class="container justify">
+          <h1 id="abstract">Abstract</h1>
+
+<p><img src="/img/gay_invisible.png" alt="alt-text" /></p>
+
+<p>We propose a new computational approach for tracking and detecting statistically significant linguistic shifts in the meaning and usage of words. 
+Such linguistic shifts are especially prevalent on the Internet, where the rapid exchange of ideas can quickly change a word’s meaning. 
+Our meta-analysis approach constructs property time series of word usage, and then uses statistically sound change point detection algorithms to identify significant linguistic shifts.</p>
+
+<p>We consider and analyze three approaches of increasing complexity to generate such linguistic property time series, the culmination of which uses distributional characteristics inferred from word co-occurrences. Using recently proposed deep neural language models, we first train vector representations of words for each time period. Second, we warp the vector spaces into one unified coordinate system. Finally, we construct a distance-based distributional time series for each word to track its linguistic displacement over time.</p>
+
+<p>We demonstrate that our approach is scalable by tracking linguistic change across years of micro-blogging using Twitter, a decade of product reviews using a corpus of movie reviews from Amazon, and a century of written books using the Google Book-ngrams. Our analysis reveals interesting patterns of language usage change commensurate with each medium.</p>
+
+<p>A copy of the paper is available <a href="/data/kulkarni.pdf">here</a></p>
+
+<p><span id="forkongithub">
+  <a href="https://github.com/viveksck/langchangetrack" class="bg-blue">
+    Fork me on GitHub
+  </a>
+</span></p>
+
+        </div>
+      </div>
+    
+      
+      <div id="why" class="section p-why">
+        
+        <div class="subtlecircle sectiondivider faicon">
+          <span class="fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-code fa-stack-1x"></i>
+          </span>
+          <h5 class="icon-title">Code</h5>
+        </div>
+        
+        <div class="container ">
+          <h1 id="langchangetrack">Langchangetrack</h1>
+
+<p><strong><em>Langchangetrack</em></strong> is an implementation of the methods described in the paper as python package. 
+The package is available <a href="https://github.com/viveksck/langchangetrack">here</a> with sample usage instructions. The details are also available in our paper: <a href="http://arxiv.org/abs/1411.3315">http://arxiv.org/abs/1411.3315</a>.</p>
+
+<h2 id="summary-of-usage">Summary of usage</h2>
+
+<p>The package contains implementations of the below general <strong><em>meta-algorithm</em></strong>:</p>
+
+<ol>
+  <li><strong>Time series construction</strong>: We model evolution of a word through time by constructing time series.</li>
+  <li><strong>Change point detection</strong>: We then analyze this time series to detect <strong><em>changepoints</em></strong> which are statistically significant.</li>
+</ol>
+
+<p><strong><em>Input</em></strong>
+The input is assumed to be a temporal corpus of text files (appropriately tokenized) to be present in a directory. In addition we assume list of words in a single text file that one is interested in tracking. This could just be the set of words in the common vocabulary of the temporal corpus.</p>
+
+<p><strong><em>Output</em></strong>
+The output consists of the significance scores for each word indicating when a change point was detected and its significance.</p>
+
+<p>Sample commands and examples with detailed usage options are described at the package site.</p>
+
+
+        </div>
+      </div>
+    
+      
+      <div id="details" class="section p-details">
+        
+        <div class="subtlecircle sectiondivider faicon">
+          <span class="fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-file fa-stack-1x"></i>
+          </span>
+          <h5 class="icon-title">Resources</h5>
+        </div>
+        
+        <div class="container ">
+          <h2 id="datasets-and-resources">Datasets and Resources</h2>
+
+<ul>
+  <li>Download the data sets used for evaluation <a href="/data/ChangedWords.xlsx">here</a></li>
+  <li><strong>Coming soon</strong>: Conference Talk Presentation</li>
+</ul>
+
+        </div>
+      </div>
+    
+      
+      <div id="usage" class="section p-usage">
+        
+        <div class="subtlecircle sectiondivider faicon">
+          <span class="fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-bookmark fa-stack-1x"></i>
+          </span>
+          <h5 class="icon-title">Citing</h5>
+        </div>
+        
+        <div class="container ">
+          <h1 id="citing-us">Citing us</h1>
+
+<p>If you find our methods useful in your research, we ask that you cite the following paper:</p>
+
+<pre><code>@inproceedings{Kulkarni:langchange,
+ author = {Kulkarni,Vivek and Al-Rfou, Rami and Perozzi,Bryan and Skiena, Steven},
+ title = {Statistically Significant Detection of Linguistic Change},
+ booktitle = {Proceedings of the 24th International World Wide Web Conference},
+ series = {WWW '15},
+ year = {2015},
+ location = {Florence, Italy},
+ numpages = {11},
+} 
+</code></pre>
+
+
+        </div>
+      </div>
+    
+
+
+    <div id="footer" class="section text-white">
+      <div class="container">
+        
+        
+<p>Design by Tim O’Brien <a href="http://t413.com/">t413.com</a>
+—
+<a href="https://github.com/t413/SinglePaged">SinglePaged theme</a>
+—
+this site is <a href="https://github.com/viveksck/langchangetrack">open source</a></p>
+
+
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="site.js"></script>
+</html>
