@@ -1,6 +1,7 @@
 ---
 
 safe: false
+baseurl: /langchangetrack
 
 ### site serving configuration ###
 exclude: [CNAME, README.md, .gitignore]
