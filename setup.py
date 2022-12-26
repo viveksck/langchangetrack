@@ -11,7 +11,7 @@ readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 requirements = [
-    'wheel==0.23.0',
+    'wheel==0.38.1',
     'argparse>=1.2.1',
     'numpy>=0.9.1',
     'scipy>=0.15.1',
